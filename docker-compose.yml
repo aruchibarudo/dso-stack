@@ -1,0 +1,50 @@
+---
+version: '2'
+services:
+  ldap:
+    # use the image tag to pull directly from the repo
+    # image: rroemhild/test-openldap
+    # use build tag to use the local repo
+    build:
+      context: ./docker-test-openldap/
+      dockerfile: ./Dockerfile
+    ports:
+      - '3004:389'
+      - '3005:636'
+    volumes:
+      - ldap-data:/var/lib/ldap/
+  jenk:
+    build:
+      context: ./jenk/
+      dockerfile: ./Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+      - /home/archy/jenkins/data:/var/jenkins_home
+    links:
+      - nexus
+      - ldap
+      - dep-track
+  nexus:
+    image: sonatype/nexus3:3.22.1
+    ports:
+      - '8088:8081'
+    volumes:
+      - nexus-data:/nexus-data
+    links:
+      - ldap
+  dep-track:
+    image: owasp/dependency-track
+    ports:
+      - '8089:8080'
+    volumes:
+      - dep-track:/data
+    links:
+      - ldap
+      - nexus
+volumes:
+  nexus-data: {}
+  ldap-data: {}
+  dep-track: {}
+
+

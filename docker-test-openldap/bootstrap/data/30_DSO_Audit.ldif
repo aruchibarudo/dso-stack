@@ -1,0 +1,6 @@
+dn: cn=DSO_Audit,ou=people,dc=planetexpress,dc=com
+objectclass: Group
+objectclass: top
+groupType: 2147483650
+cn: DSO_Audit
+member: cn=Bender Bending Rodríguez,ou=people,dc=planetexpress,dc=com
